@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function Landing() {
   return (
     <div className="hero min-h-screen bg-base-200">
@@ -9,7 +11,17 @@ export default function Landing() {
             excepturi exercitationem quasi. In deleniti eaque aut repudiandae et
             a id nisi.
           </p>
-          <button className="btn btn-primary">Get Started</button>
+          <div className="flex gap-10">
+            <Link to="/a/login">
+              <button className="btn btn-primary">Admin Login</button>
+            </Link>
+            <Link to="/t/login">
+              <button className="btn btn-secondary">Teacher login</button>
+            </Link>
+            <Link to="/s/login">
+              <button className="btn btn-accent">Student login</button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

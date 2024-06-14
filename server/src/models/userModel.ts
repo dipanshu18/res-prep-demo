@@ -1,6 +1,13 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+interface User extends Document {
+  name: string;
+  email: string;
+  password: string;
+  role: "ADMIN" | "TEACHER" | "STUDENT";
+}
+
+const userSchema = new mongoose.Schema<User>({
   name: {
     type: String,
     required: true,
@@ -9,6 +16,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    match: /^[a-z]\.[a-z]@vit\.edu\.in$/,
+    message:
+      "Given email is not a valid email! It should be in the format [a-z].[a-z]@vit.edu.in",
   },
   password: {
     type: String,
@@ -21,4 +31,4 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-export const userModel = mongoose.model("User", userSchema);
+export const userModel = mongoose.model<User>("User", userSchema);

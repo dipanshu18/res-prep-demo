@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 interface AdminLoginData {
   email: string;
@@ -53,14 +52,6 @@ export const AdminLogin = () => {
                 className="input input-bordered"
                 required
               />
-              <label className="label">
-                <span className="label-text-alt">
-                  Not have an account?{" "}
-                  <Link to="/a/signup" className="link-hover link">
-                    Create one
-                  </Link>
-                </span>
-              </label>
             </div>
             <div className="form-control mt-6">
               <button className="btn btn-primary">Login</button>

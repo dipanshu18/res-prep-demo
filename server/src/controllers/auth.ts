@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import { userModel } from "../models/userModel";
+import mongoose from "mongoose";
 
 dotenv.config();
 
@@ -45,9 +46,17 @@ export const signup = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.log("Error:", error);
+    if (error instanceof mongoose.Error.ValidationError) {
+      if (error.errors.email) {
+        return res
+          .status(400)
+          .json({ message: "Email must be registered with @vit.edu.in" });
+      }
+    }
+
     return res
       .status(500)
-      .json({ message: "Error while signup with provided credentials!" });
+      .json({ message: "Error while signing up with provided credentials!" });
   }
 };
 
@@ -76,9 +85,10 @@ export const login = async (req: Request, res: Response) => {
     res.status(200).json({ message: "Login success!" });
   } catch (error) {
     console.log("Error:", error);
+
     return res
       .status(500)
-      .json({ message: "Error while login with provided credentials!" });
+      .json({ message: "Error while signing up with provided credentials!" });
   }
 };
 

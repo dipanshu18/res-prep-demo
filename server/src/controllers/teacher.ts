@@ -5,8 +5,8 @@ import { teacherModel } from "../models/teacherModel";
 
 export const getTeachers = async (req: Request, res: Response) => {
   try {
-    const { department, semester } = req.body;
-    const teachers = await teacherModel.find({ department, semester });
+    // const { department, semester } = req.body;
+    const teachers = await teacherModel.find({});
 
     if (teachers.length < 1) {
       return res.status(404).json({ message: "No teachers found" });

@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 import { connectDB } from "./config/db";
 import { authRouter } from "./routes/auth";
-import { adminRouter } from "./routes/user";
+import { adminRouter } from "./routes/admin";
 import { verifyUser } from "./middlewares/auth";
 import { teacherRouter } from "./routes/teacher";
 import { studentRouter } from "./routes/student";

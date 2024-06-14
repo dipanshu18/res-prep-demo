@@ -2,21 +2,19 @@ import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: string;
-}
+import { Teacher } from "../../types/teacher";
+import { Student } from "../../types/student";
+import { TeachersTable } from "../../components/TeachersTable";
+import { StudentsTable } from "../../components/StudentsTable";
 
 export const TeacherDashboard = () => {
-  const [teachers, setTeachers] = useState<User[]>([]);
-  const [students, setStudents] = useState<User[]>([]);
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [students, setStudents] = useState<Student[]>([]);
 
-  const fetchUsers = async () => {
+  const fetchTeachers = async () => {
     try {
-      const response = await axios.get<Promise<User[] | []>>(
-        "http://localhost:8080/api/v1/users",
+      const response = await axios.get<Promise<Teacher[] | []>>(
+        "http://localhost:8080/api/v1/teachers",
         {
           withCredentials: true,
         },
@@ -25,8 +23,29 @@ export const TeacherDashboard = () => {
       const data = await response.data;
 
       if (response.status === 200) {
-        setTeachers(data.filter((user: User) => user.role === "TEACHER"));
-        setStudents(data.filter((user: User) => user.role === "STUDENT"));
+        setTeachers(data);
+      }
+    } catch (error) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        error.response && toast.error(error.response?.data.message);
+      }
+    }
+  };
+
+  const fetchStudents = async () => {
+    try {
+      const response = await axios.get<Promise<Student[] | []>>(
+        "http://localhost:8080/api/v1/students",
+        {
+          withCredentials: true,
+        },
+      );
+
+      const data = await response.data;
+
+      if (response.status === 200) {
+        setStudents(data);
       }
     } catch (error) {
       console.log(error);
@@ -37,68 +56,19 @@ export const TeacherDashboard = () => {
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchTeachers();
+    fetchStudents();
   }, []);
 
   return (
     <>
       <div className="container p-10">
         <div className="mb-10">
-          <h1>Teachers Data</h1>
-          <div className="overflow-x-auto">
-            <table className="table">
-              {/* head */}
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* row */}
-                {teachers &&
-                  teachers.map((teacher, idx) => (
-                    <tr key={teacher._id} className="hover">
-                      <th>{idx + 1}</th>
-                      <td>{teacher.name}</td>
-                      <td>{teacher.email}</td>
-                      <td>{teacher.role}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+          <TeachersTable teachers={teachers} />
         </div>
 
         <div>
-          <h1>Students Data</h1>
-          <div className="overflow-x-auto">
-            <table className="table">
-              {/* head */}
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* row */}
-                {students &&
-                  students.map((student, idx) => (
-                    <tr key={student._id} className="hover">
-                      <th>{idx + 1}</th>
-                      <td>{student.name}</td>
-                      <td>{student.email}</td>
-                      <td>{student.role}</td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+          <StudentsTable students={students} />
         </div>
       </div>
     </>

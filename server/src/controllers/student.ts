@@ -5,8 +5,8 @@ import { studentModel } from "../models/studentModel";
 
 export const getStudents = async (req: Request, res: Response) => {
   try {
-    const { department, semester } = req.body;
-    const students = await studentModel.find({ department, semester });
+    // const { department, semester } = req.body;
+    const students = await studentModel.find({});
 
     if (students.length < 1) {
       return res.status(404).json({ message: "No students found" });

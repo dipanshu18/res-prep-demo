@@ -5,8 +5,18 @@ import { studentModel } from "../models/studentModel";
 
 export const getStudents = async (req: Request, res: Response) => {
   try {
-    // const { department, semester } = req.body;
-    const students = await studentModel.find({});
+    const { department, semester, role } = req.body.user;
+
+    let query = {};
+    if (role === "TEACHER" || role === "STUDENT") {
+      query = {
+        role: { $in: ["TEACHER", "STUDENT"] },
+        department: department,
+        semester: semester,
+      };
+    }
+
+    const students = await studentModel.find(query);
 
     if (students.length < 1) {
       return res.status(404).json({ message: "No students found" });
@@ -58,7 +68,7 @@ export const createStudent = async (req: Request, res: Response) => {
     });
 
     if (newStudent) await newStudent.save();
-    return res.status(200).json({ message: "Student created!" });
+    return res.status(201).json({ message: "Student created!" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong!" });
@@ -116,7 +126,6 @@ export const deleteStudent = async (req: Request, res: Response) => {
 
     await studentModel.deleteOne({ _id: id });
 
-    res.clearCookie("uid");
     return res.status(200).json({ message: "Student deleted!" });
   } catch (error) {
     console.log(error);

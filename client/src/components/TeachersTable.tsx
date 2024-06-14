@@ -2,6 +2,10 @@ import { Teacher } from "../types/teacher";
 import { TeacherRow } from "./TeacherRow";
 
 export const TeachersTable = ({ teachers }: { teachers: Teacher[] }) => {
+  const currentUserRole = localStorage.getItem("role") as
+    | "STUDENT"
+    | "TEACHER"
+    | "ADMIN";
   return (
     <>
       <h1 className="text-2xl font-semibold">Teachers Data</h1>
@@ -22,7 +26,12 @@ export const TeachersTable = ({ teachers }: { teachers: Teacher[] }) => {
           </thead>
           <tbody>
             {teachers.map((teacher, idx) => (
-              <TeacherRow teacher={teacher} key={teacher._id} idx={idx} />
+              <TeacherRow
+                currentUserRole={currentUserRole}
+                teacher={teacher}
+                key={teacher._id}
+                idx={idx}
+              />
             ))}
           </tbody>
         </table>

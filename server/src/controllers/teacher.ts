@@ -5,8 +5,18 @@ import { teacherModel } from "../models/teacherModel";
 
 export const getTeachers = async (req: Request, res: Response) => {
   try {
-    // const { department, semester } = req.body;
-    const teachers = await teacherModel.find({});
+    const { department, semester, role } = req.body.user;
+
+    let query = {};
+    if (role === "TEACHER" || role === "STUDENT") {
+      query = {
+        role: { $in: ["TEACHER", "STUDENT"] },
+        department: department,
+        semester: semester,
+      };
+    }
+
+    const teachers = await teacherModel.find(query);
 
     if (teachers.length < 1) {
       return res.status(404).json({ message: "No teachers found" });
@@ -57,7 +67,7 @@ export const createTeacher = async (req: Request, res: Response) => {
     });
 
     if (newTeacher) await newTeacher.save();
-    return res.status(200).json({ message: "Teacher created!" });
+    return res.status(201).json({ message: "Teacher created!" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something went wrong!" });
@@ -113,7 +123,6 @@ export const deleteTeacher = async (req: Request, res: Response) => {
 
     await teacherModel.deleteOne({ _id: id });
 
-    res.clearCookie("uid");
     return res.status(200).json({ message: "Teacher deleted!" });
   } catch (error) {
     console.log(error);

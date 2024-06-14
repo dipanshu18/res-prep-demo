@@ -72,7 +72,6 @@ export const deleteAdmin = async (req: Request, res: Response) => {
 
     await adminModel.deleteOne({ _id: id });
 
-    res.clearCookie("uid");
     return res.status(200).json({ message: "Admin deleted!" });
   } catch (error) {
     console.log(error);

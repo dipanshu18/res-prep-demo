@@ -1,14 +1,14 @@
 import express from "express";
 import { deleteUser, getUser, getUsers, updateUser } from "../controllers/user";
 
-const userRouter = express.Router();
+const adminRouter = express.Router();
 
-userRouter.get("/", getUsers);
+adminRouter.get("/", getUsers);
 
-userRouter.get("/:id", getUser);
+adminRouter.get("/:id", getUser);
 
-userRouter.patch("/:id", updateUser);
+adminRouter.patch("/:id", updateUser);
 
-userRouter.delete("/:id", deleteUser);
+adminRouter.delete("/:id", deleteUser);
 
-export { userRouter };
+export { adminRouter };

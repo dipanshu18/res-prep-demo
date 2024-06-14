@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 
-import { userModel } from "../models/userModel";
+import { adminModel } from "../models/adminModel";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -12,7 +12,7 @@ export const getUsers = async (req: Request, res: Response) => {
       query = { role: { $in: ["TEACHER", "STUDENT"] } };
     }
 
-    const users = await userModel.find(query);
+    const users = await adminModel.find(query);
 
     if (users.length < 1) {
       return res.status(404).json({ message: "No users found" });
@@ -28,7 +28,7 @@ export const getUsers = async (req: Request, res: Response) => {
 export const getUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const userExists = await userModel.findById(id);
+    const userExists = await adminModel.findById(id);
 
     if (!userExists) return res.status(404).json({ message: "No users found" });
 
@@ -43,7 +43,7 @@ export const updateUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { name, email, password } = req.body;
-    const userExists = await userModel.findById(id);
+    const userExists = await adminModel.findById(id);
 
     if (!name && !email && !password)
       return res.status(400).json({ message: "Nothing to update" });
@@ -57,7 +57,7 @@ export const updateUser = async (req: Request, res: Response) => {
     if (email) updatedInfo.email = email;
     if (password) updatedInfo.password = await bcrypt.hash(password, 10);
 
-    const updatedUser = await userModel.updateOne({ _id: id }, updatedInfo);
+    const updatedUser = await adminModel.updateOne({ _id: id }, updatedInfo);
 
     if (updatedUser)
       return res.status(200).json({ message: "User updated success!" });
@@ -70,11 +70,11 @@ export const updateUser = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const userExists = await userModel.findById(id);
+    const userExists = await adminModel.findById(id);
 
     if (!userExists) return res.status(404).json({ message: "No users found" });
 
-    await userModel.deleteOne({ _id: id });
+    await adminModel.deleteOne({ _id: id });
 
     res.clearCookie("uid");
     return res.status(200).json({ message: "User deleted!" });

@@ -34,6 +34,7 @@ export const StudentLogin = () => {
       if (response.status === 200) {
         toast.success(data.message);
         localStorage.setItem("auth", "true");
+        localStorage.setItem("role", "STUDENT");
         navigate("/s/dashboard");
       } else {
         console.log(data.message);

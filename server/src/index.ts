@@ -5,8 +5,10 @@ import dotenv from "dotenv";
 
 import { connectDB } from "./config/db";
 import { authRouter } from "./routes/auth";
-import { userRouter } from "./routes/user";
+import { adminRouter } from "./routes/user";
 import { verifyUser } from "./middlewares/auth";
+import { teacherRouter } from "./routes/teacher";
+import { studentRouter } from "./routes/student";
 
 dotenv.config();
 
@@ -25,10 +27,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/users", verifyUser, userRouter);
+app.use("/api/v1/admins", verifyUser, adminRouter);
+app.use("/api/v1/teachers", verifyUser, teacherRouter);
+app.use("/api/v1/students", verifyUser, studentRouter);
 
 app.get("/", (req: Request, res: Response) => {
-  res.json({ message: "Hello, world! Server working..." });
+  res.json({ message: "Server up and running..." });
 });
 
 app.listen(PORT, async () => {

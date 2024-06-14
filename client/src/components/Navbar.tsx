@@ -1,9 +1,21 @@
 import { Link, useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
-import { User } from "lucide-react";
 import { toast } from "sonner";
 
-export const Navbar = () => {
+function getRedirectPathForRole(role: string | null) {
+  switch (role) {
+    case "ADMIN":
+      return "/a/dashboard";
+    case "TEACHER":
+      return "/t/dashboard";
+    case "STUDENT":
+      return "/s/dashboard";
+    default:
+      return "/";
+  }
+}
+
+export const Navbar = ({ role }: { role: "ADMIN" | "TEACHER" | "STUDENT" }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -19,6 +31,7 @@ export const Navbar = () => {
       if (response.status === 200) {
         toast.success(data.message);
         localStorage.removeItem("auth");
+        localStorage.removeItem("role");
         navigate("/");
       }
     } catch (error) {
@@ -32,31 +45,17 @@ export const Navbar = () => {
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
-        <span className="text-2xl font-extrabold">resPrep</span>
+        <Link
+          to={getRedirectPathForRole(role)}
+          className="btn btn-ghost text-2xl font-extrabold"
+        >
+          resPrep
+        </Link>
       </div>
       <div className="flex-none">
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="avatar btn btn-circle btn-ghost"
-          >
-            <div className="rounded-full">
-              <User />
-            </div>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
-          >
-            <li>
-              <Link to="/a/profile">Profile</Link>
-            </li>
-            <li>
-              <button onClick={handleLogout}>Logout</button>
-            </li>
-          </ul>
-        </div>
+        <button onClick={handleLogout} className="btn btn-neutral">
+          Logout
+        </button>
       </div>
     </div>
   );

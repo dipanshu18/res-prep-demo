@@ -34,6 +34,7 @@ export const AdminLogin = () => {
       if (response.status === 200) {
         toast.success(data.message);
         localStorage.setItem("auth", "true");
+        localStorage.setItem("role", "ADMIN");
         navigate("/a/dashboard");
       } else {
         console.log(data.message);

@@ -15,16 +15,17 @@ const PORT = process.env.PORT as unknown as number;
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded({ extended: false }));
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(cookieParser());
-
-app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/users", verifyUser, userRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`${req.path} ${req.method}`);
   next();
 });
+
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", verifyUser, userRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Hello, world! Server working..." });

@@ -1,15 +1,51 @@
-import { useState } from "react";
+import axios, { AxiosError } from "axios";
+import { FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface StudentLoginData {
   email: string;
   password: string;
+  role: "STUDENT";
 }
 
 export const StudentLogin = () => {
   const [studentData, setStudentData] = useState<StudentLoginData>({
     email: "",
     password: "",
+    role: "STUDENT",
   });
+
+  const navigate = useNavigate();
+
+  const handleStudentLogin = async (e: FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/auth/login",
+        studentData,
+        {
+          withCredentials: true,
+        },
+      );
+
+      const data = await response.data;
+      if (response.status === 200) {
+        toast.success(data.message);
+        localStorage.setItem("auth", "true");
+        navigate("/s/dashboard");
+      } else {
+        console.log(data.message);
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        error.response && toast.error(error?.response?.data.message);
+      }
+    }
+  };
 
   return (
     <div className="hero min-h-screen bg-base-200">
@@ -22,7 +58,7 @@ export const StudentLogin = () => {
           </p>
         </div>
         <div className="card w-full max-w-lg shrink-0 bg-base-100 shadow-2xl">
-          <form className="card-body">
+          <form onSubmit={handleStudentLogin} className="card-body">
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>

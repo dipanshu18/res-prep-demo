@@ -62,9 +62,9 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
 
-    const userExists = await userModel.findOne({ email });
+    const userExists = await userModel.findOne({ email, role });
 
     if (!userExists) {
       return res.status(404).json({ message: "User doesn't exists!" });
